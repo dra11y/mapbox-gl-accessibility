@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang='en'>
+
 <head>
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -8,26 +9,91 @@
   <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
   <script src='mapbox-gl-accessibility.js'></script>
   <script src='get-token.js'></script>
+
+  <style>
+    #links g path {
+      stroke-width: 1px !important;
+    }
+
+    #links g:focus path {
+      stroke-width: 8px !important;
+      stroke: aqua !important;
+    }
+  </style>
 </head>
+
 <body>
   <div id='map' class='map'></div>
   <script>
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-79.387, 43.656],
-      zoom: 13.5
+      center: [-105.01, 39.725],
+      zoom: 10
     });
 
+    window.map = map
+
     map.on('load', () => {
+
+      // https://gist.github.com/danswick/f4aa01a046385eb69313499b7934f425
+      map.addSource('highways', {
+        type: 'vector',
+        url: 'mapbox://bahaimap.highways'
+      })
+
+      map.addLayer({
+        "id": "highways-layer",
+        "type": "line",
+        "source": "highways",
+        "source-layer": "highways",
+      })
+
+      // motorway, primary, secondary, tertiary, trunk
+
+      // console.log(map.queryRenderedFeatures().map(f => f.layer.id).reduce((c, v) => { if (!c.includes(v)) c.push(v); return c; }, []))
+      // console.log(map.queryRenderedFeatures().map(f => f.properties.type).reduce((c, v) => { if (!c.includes(v)) c.push(v); return c; }, []))
       map.addControl(new MapboxAccessibility({
         accessibleLabelProperty: 'name',
         layers: [
-          'poi-label',
-          'transit-label'
+          //          'poi-label',
+          //          'transit-label',
+          // 'road-primary',
+          // 'road-motorway-trunk',
+          // 'road-secondary-tertiary',
+          // 'road-street',
+          // 'road-major-link',
+          // 'road-rail',
+
+          'road-construction',
+          'road-exit-shield',
+          'road-label',
+          'road-major-link',
+          'road-minor',
+          'road-minor-case',
+          'road-minor-low',
+          'road-motorway-trunk',
+          'road-number-shield',
+          'road-oneway-arrow-blue',
+          'road-oneway-arrow-white',
+          'road-path',
+          'road-path-bg',
+          'road-pedestrian',
+          'road-pedestrian-polygon-fill',
+          'road-pedestrian-polygon-pattern',
+          'road-polygon',
+          'road-primary',
+          'road-rail',
+          'road-rail-tracks',
+          'road-secondary-tertiary',
+          'road-steps',
+          'road-steps-bg',
+          'road-street',
+          'road-street-low',
         ]
       }));
     });
   </script>
 </body>
+
 </html>
